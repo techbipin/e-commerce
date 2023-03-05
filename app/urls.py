@@ -4,6 +4,7 @@ from .views import (
     auth,
     sign_in,
     sign_up,
+    sign_out,
     about,
     shop,
     product,
@@ -21,10 +22,11 @@ urlpatterns = [
     path('sign-in/', sign_in, name="sign-in"),
 
     path('sign-up/', sign_up, name="sign-up"),
+    path('sign-out/', sign_out, name="sign-out"),
     path('about/', about, name="about"),
     path('shop/', shop, name="shop"),
     
-    path('product/', product, name="product"),
+    path('product/<int:id>/', product, name="product"),
     path('cart/', cart, name="cart"),
     path('checkout/', checkout, name="checkout"),
 

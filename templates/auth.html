@@ -1,4 +1,5 @@
 {% extends 'base.html' %} 
+{% load socialaccount %}
 
 {% block title %}
 Auth | Shoppers
@@ -9,9 +10,7 @@ Auth | Shoppers
   <div class="container">
     <div class="row">
       <div class="col-md-12 mb-0">
-        <a href="index.html">Home</a> <span class="mx-2 mb-0">/</span>
-        <a href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span>
-        <strong class="text-black">Checkout</strong>
+        <div class="col-md-12 mb-0"><a href="{% url 'home' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Auth</strong></div>
       </div>
     </div>
   </div>
@@ -19,6 +18,16 @@ Auth | Shoppers
 
 <div class="site-section">
   <div class="container">
+    {% if messages %}
+        <div class="alert {% for message in messages %}{% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}{% endfor %} alert-dismissible alert-outline fade show" role="alert">
+            {% for message in messages %}
+            <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="row">
       <div class="col-md-6 mb-5 mb-md-0">
         <h2 class="h3 mb-3 text-black">Sign Up</h2>
@@ -115,6 +124,7 @@ Auth | Shoppers
             <div class="p-3 p-lg-5 border">
               <form method="POST" action="{% url 'sign-in' %}">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_companyname" class="text-black"
@@ -152,9 +162,9 @@ Auth | Shoppers
                 </div>
               </form>
             <div class="form-group">
-                <button class="btn btn-danger btn-lg py-3 btn-block">
+                <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-lg py-3 btn-block">
                     Sign in with Google
-                </button>
+                </a>
             </div>
           </div>
         </div>

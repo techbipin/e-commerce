@@ -9,20 +9,12 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700"> 
     <link rel="stylesheet" href="{% static 'assets/fonts/icomoon/style.css' %}">
-
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
     <link rel="stylesheet" href="{% static 'assets/css/aos.css' %}">
-
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     
   </head>
@@ -50,7 +42,11 @@
             <div class="col-6 col-md-4 order-3 order-md-3 text-right">
               <div class="site-top-icons">
                 <ul>
-                  <li><a href="{% url 'auth' %}"><span class="icon icon-person"></span></a></li>
+                  {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'sign-out' %}"><span class="icon icon-person">*</span></a></li>
+                  {% else %}
+                    <li><a href="{% url 'auth' %}"><span class="icon icon-person"></span></a></li>
+                  {% endif %}
                   <li>
                     <a href="{% url 'cart' %}" class="site-cart">
                       <span class="icon icon-shopping_cart"></span>
@@ -161,11 +157,6 @@
   <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
   <script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
   <script src="{% static 'assets/js/aos.js' %}"></script>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-VqpHXpV7+kRyR0M96I9uLd3qVH12TQnNzoS1UkIzr+7HxCZmz3aXoYlWo2+VefGr" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
   <script src="{% static 'assets/js/main.js' %}"></script>
     
   </body>
