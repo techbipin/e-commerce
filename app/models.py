@@ -18,6 +18,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     verify_token = models.CharField(max_length=255, default="")
+    is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'contact']
@@ -54,3 +55,6 @@ class Product(models.Model):
     price = models.FloatField(default=10.0)
     size = models.CharField(choices=SIZE, max_length=100)
     collection = models.CharField(choices=COLLECTIONS, max_length=100)
+    
+    def __str__(self):
+        return self.name

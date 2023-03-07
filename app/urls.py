@@ -5,6 +5,7 @@ from .views import (
     sign_in,
     sign_up,
     sign_out,
+    verify_account,
     about,
     shop,
     product,
@@ -20,9 +21,10 @@ urlpatterns = [
     path('', home, name="home"),
     path('auth/', auth, name="auth"),
     path('sign-in/', sign_in, name="sign-in"),
-
     path('sign-up/', sign_up, name="sign-up"),
+    
     path('sign-out/', sign_out, name="sign-out"),
+    path('verify-account/<str:token>/', verify_account, name="verify-account"),
     path('about/', about, name="about"),
     path('shop/', shop, name="shop"),
     

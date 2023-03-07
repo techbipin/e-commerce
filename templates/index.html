@@ -6,6 +6,16 @@ Home | Shoppers
 {% endblock title %}
 
 {% block content %}
+{% if messages %}
+    <div class="alert {% for message in messages %}{% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}{% endfor %} alert-dismissible alert-outline fade show" role="alert">
+        {% for message in messages %}
+        <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endfor %}
+    </div>
+{% endif %}
 <div class="site-blocks-cover" style="background-image: url(static/assets/images/hero_1.jpg);" data-aos="fade">
   <div class="container">
     <div class="row align-items-start align-items-md-center justify-content-end">
@@ -17,7 +27,7 @@ Home | Shoppers
             With these factors in mind, you can find the perfect shoes that will keep you comfortable and stylish all day long.
           </p>
           <p>
-            <a href="#" class="btn btn-sm btn-primary">Shop Now</a>
+            <a href="{% url 'shop' %}" class="btn btn-sm btn-primary">Shop Now</a>
           </p>
         </div>
       </div>
@@ -109,66 +119,20 @@ Home | Shoppers
     <div class="row">
       <div class="col-md-12">
         <div class="nonloop-block-3 owl-carousel">
+          {% for product in products %}
           <div class="item">
             <div class="block-4 text-center">
               <figure class="block-4-image">
-                <img src="{% static 'assets/images/cloth_1.jpg' %}" alt="Image placeholder" class="img-fluid">
+                <img src="{{product.image.url}}" alt="Image placeholder" class="img-fluid">
               </figure>
               <div class="block-4-text p-4">
-                <h3><a href="#">Tank Top</a></h3>
-                <p class="mb-0">Finding perfect t-shirt</p>
-                <p class="text-primary font-weight-bold">$50</p>
+                <h3><a href="{% url 'product' product.id %}">{{product.name}}</a></h3>
+                <p class="mb-0">{{product.description}}</p>
+                <p class="text-primary font-weight-bold">&#8377;{{product.price}}</p>
               </div>
             </div>
           </div>
-          <div class="item">
-            <div class="block-4 text-center">
-              <figure class="block-4-image">
-                <img src="{% static 'assets/images/shoe_1.jpg' %}" alt="Image placeholder" class="img-fluid">
-              </figure>
-              <div class="block-4-text p-4">
-                <h3><a href="#">Corater</a></h3>
-                <p class="mb-0">Finding perfect products</p>
-                <p class="text-primary font-weight-bold">$50</p>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="block-4 text-center">
-              <figure class="block-4-image">
-                <img src="static/assets/images/cloth_2.jpg" alt="Image placeholder" class="img-fluid">
-              </figure>
-              <div class="block-4-text p-4">
-                <h3><a href="#">Polo Shirt</a></h3>
-                <p class="mb-0">Finding perfect products</p>
-                <p class="text-primary font-weight-bold">$50</p>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="block-4 text-center">
-              <figure class="block-4-image">
-                <img src="static/assets/images/cloth_3.jpg" alt="Image placeholder" class="img-fluid">
-              </figure>
-              <div class="block-4-text p-4">
-                <h3><a href="#">T-Shirt Mockup</a></h3>
-                <p class="mb-0">Finding perfect products</p>
-                <p class="text-primary font-weight-bold">$50</p>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="block-4 text-center">
-              <figure class="block-4-image">
-                <img src="static/assets/images/shoe_1.jpg" alt="Image placeholder" class="img-fluid">
-              </figure>
-              <div class="block-4-text p-4">
-                <h3><a href="#">Corater</a></h3>
-                <p class="mb-0">Finding perfect products</p>
-                <p class="text-primary font-weight-bold">$50</p>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -184,13 +148,13 @@ Home | Shoppers
     </div>
     <div class="row align-items-center">
       <div class="col-md-12 col-lg-7 mb-5">
-        <a href="#"><img src="static/assets/images/blog_1.jpg" alt="Image placeholder" class="img-fluid rounded"></a>
+        <a href="{% url 'shop' %}"><img src="{% static 'assets/images/blog_1.jpg' %}" alt="Image placeholder" class="img-fluid rounded"></a>
       </div>
       <div class="col-md-12 col-lg-5 text-center pl-md-5">
-        <h2><a href="#">50% less in all items</a></h2>
+        <h2><a href="{% url 'shop' %}">50% less in all items</a></h2>
         <p class="post-meta mb-4">By <a href="#">Carl Smith</a> <span class="block-8-sep">&bullet;</span> September 3, 2018</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam iste dolor accusantium facere corporis ipsum animi deleniti fugiat. Ex, veniam?</p>
-        <p><a href="#" class="btn btn-primary btn-sm">Shop Now</a></p>
+        <p><a href="{% url 'shop' %}" class="btn btn-primary btn-sm">Shop Now</a></p>
       </div>
     </div>
   </div>
