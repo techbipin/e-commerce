@@ -16,7 +16,16 @@ Shop | Shoppers
 
     <div class="site-section">
       <div class="container">
-
+        {% if messages %}
+          <div class="alert {% for message in messages %}{% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}{% endfor %} alert-dismissible alert-outline fade show" role="alert">
+              {% for message in messages %}
+              <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              {% endfor %}
+          </div>
+        {% endif %}
         <div class="row mb-5">
           <div class="col-md-9 order-2">
 

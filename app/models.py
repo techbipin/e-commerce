@@ -58,3 +58,14 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+    
+    
+class Cart(models.Model):
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    quantity = models.IntegerField(default=1)
+    price = models.FloatField(default=1.0)
+    
+    def __str__(self):
+        return str(self.id)

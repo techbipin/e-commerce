@@ -10,6 +10,8 @@ from .views import (
     shop,
     product,
     cart,
+    add_to_cart,
+    remove_from_cart,
     checkout,
     contact,
     thank_you
@@ -30,6 +32,8 @@ urlpatterns = [
     
     path('product/<int:id>/', product, name="product"),
     path('cart/', cart, name="cart"),
+    path('add-to-cart/<int:id>/', add_to_cart, name="add-to-cart"),
+    path('remove-from-cart/<int:id>/', remove_from_cart, name="remove-from-cart"),
     path('checkout/', checkout, name="checkout"),
 
     path('contact/', contact, name="contact"),

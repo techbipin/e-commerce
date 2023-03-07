@@ -11,7 +11,8 @@ import string
 
 from .models import (
     User,
-    Product
+    Product,
+    Cart
 )
 
 
@@ -33,7 +34,11 @@ def sign_in(request):
                 
                 if user.is_verified:
                     login(request, user)
+                    
                     messages.success(request, "Logged In !")
+                    cart_value = Cart.objects.filter(user=request.user).count()
+                    
+                    request.session["cart"] = cart_value
                     if redirection:
                         return redirect(redirection)
                     else:
@@ -115,7 +120,9 @@ def verify_account(request, token):
 
 def sign_out(request):
     try:
+        request.session.flush()
         logout(request)
+        
         messages.success(request, "Logged Out !")
         return redirect("home")
     except:
@@ -180,7 +187,80 @@ def product(request, id):
 
 @login_required(login_url="auth")
 def cart(request):
-    return render(request, "cart.html")
+    try:
+        cart_items = Cart.objects.filter(user=request.user)
+        collective_amount = [each.price for each in cart_items]
+        
+        total = sum(collective_amount)
+         
+        return render(request, "cart.html", {"cart": cart_items, "total": total})
+    
+    except:
+        pass
+
+
+@login_required(login_url="auth")
+def add_to_cart(request, id):
+    try:
+        quantity = request.GET.get('quantity', 1)
+        product = Product.objects.get(id=id)
+        user = request.user
+        
+        cart_item = Cart.objects.filter(
+            product=product,
+            user=user
+        )
+        
+        if not cart_item:
+        
+            Cart.objects.create(
+                product=product,
+                user=user,
+                quantity=quantity,
+                price=product.price*quantity
+            )
+            
+            cart = request.session.get('cart')
+            
+            cart += 1
+            
+            request.session["cart"] = cart
+            
+        else:
+            
+            cart_item.update(
+                quantity=cart_item[0].quantity+quantity,
+                price=(cart_item[0].quantity+quantity)*product.price
+            )
+        
+        
+        messages.success(request, "Product added in cart !")
+        return redirect("shop")
+
+    except Product.DoesNotExist:
+        messages.error(request, "Product is not in SKU !")
+        return redirect("home")
+    
+    
+@login_required(login_url="auth")
+def remove_from_cart(request, id):
+    
+    product = Product.objects.get(id=id)
+    cart_item = Cart.objects.get(
+        product=product,
+        user=request.user
+    )
+    
+    cart = request.session["cart"]
+    
+    cart -= 1
+    
+    request.session["cart"] = cart
+    
+    cart_item.delete()
+    
+    messages.success(request, "Product removed")
+    return redirect("cart")
 
 
 @login_required(login_url="auth")
