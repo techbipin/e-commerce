@@ -66,6 +66,29 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     quantity = models.IntegerField(default=1)
     price = models.FloatField(default=1.0)
+    checkout = models.BooleanField(default=False)
     
     def __str__(self):
         return str(self.id)
+    
+    
+class Order(models.Model):
+    
+    STATUS = (
+        ("Pending", "Pending"),
+        ("Shipped", "Shipped"),
+        ("Delivered", "Delivered")
+    )
+    
+    order_id = models.CharField(max_length=10, unique=True)
+    order_items = models.ManyToManyField(Cart)
+    order_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.TextField(default="")
+    state = models.CharField(max_length=200, default="")
+    amount = models.FloatField(default=0.0)
+    remarks = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(choices=STATUS, max_length=100, default=STATUS[0][0])
+    
+    def __str__(self):
+        return self.order_id

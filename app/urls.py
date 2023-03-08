@@ -14,7 +14,8 @@ from .views import (
     remove_from_cart,
     checkout,
     contact,
-    thank_you
+    thank_you,
+    orders
 )
 
 
@@ -37,6 +38,7 @@ urlpatterns = [
     path('checkout/', checkout, name="checkout"),
 
     path('contact/', contact, name="contact"),
-    path('thank-you/', thank_you, name="thank-you")
+    path('thank-you/', thank_you, name="thank-you"),
+    path('orders/', orders, name="orders")
 
 ]

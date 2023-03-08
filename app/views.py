@@ -13,7 +13,8 @@ import string
 from .models import (
     User,
     Product,
-    Cart
+    Cart,
+    Order
 )
 
 
@@ -144,7 +145,6 @@ def about(request):
 
 def shop(request):
     
-    print(f"{request.GET=}")
     collection = request.GET.getlist('collection', '')
     size = request.GET.getlist('size', '')
     
@@ -210,7 +210,7 @@ def product(request, id):
 @login_required(login_url="auth")
 def cart(request):
     try:
-        cart_items = Cart.objects.filter(user=request.user)
+        cart_items = Cart.objects.filter(user=request.user, checkout=False)
         collective_amount = [each.price for each in cart_items]
         
         total = sum(collective_amount)
@@ -239,7 +239,7 @@ def add_to_cart(request, id):
                 product=product,
                 user=user,
                 quantity=quantity,
-                price=product.price*quantity
+                price=product.price*float(quantity)
             )
             
             cart = request.session.get('cart')
@@ -251,8 +251,8 @@ def add_to_cart(request, id):
         else:
             
             cart_item.update(
-                quantity=cart_item[0].quantity+quantity,
-                price=(cart_item[0].quantity+quantity)*product.price
+                quantity=cart_item[0].quantity+int(quantity),
+                price=(cart_item[0].quantity+int(quantity))*product.price
             )
         
         
@@ -287,7 +287,52 @@ def remove_from_cart(request, id):
 
 @login_required(login_url="auth")
 def checkout(request):
-    return render(request, "checkout.html")
+    try:
+        user = request.user
+        cart_items = Cart.objects.filter(user=user, checkout=False)
+        total = sum([each.price for each in cart_items])
+        if request.method == "GET":    
+            
+            return render(request, "checkout.html", {
+                "user": user,
+                "items": cart_items,
+                "total": total
+            })
+            
+        elif request.method == "POST":
+            
+            address = request.POST.get('address', '')
+            state = request.POST.get('state', '')
+            remarks = request.POST.get('remarks', '')
+            
+            letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            numbers = '0123456789'
+
+            chars = [random.choice(letters) + random.choice(numbers) for _ in range(3)]
+            result = ''.join(chars)
+            
+            order = Order.objects.create(
+                order_id=result,
+                order_by=user,
+                address=address,
+                state=state,
+                amount=total,
+                remarks=remarks
+            )
+            
+            for cart in cart_items:
+                order.order_items.add(cart)
+                order.save()
+                cart.checkout = True
+                cart.save()
+                
+            request.session["cart"] = 0
+            
+            return redirect("thank-you")
+        
+    except Exception as e:
+        messages.error(request, str(e))
+        return redirect("home")
 
 
 @login_required(login_url="auth")
@@ -298,3 +343,10 @@ def contact(request):
 @login_required(login_url="auth")
 def thank_you(request):
     return render(request, "thankyou.html")
+
+
+@login_required(login_url="auth")
+def orders(request):
+    
+    orders = Order.objects.filter(order_by=request.user)
+    return render(request, "orders.html", {"orders": orders})
