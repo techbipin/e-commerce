@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Q
 
 import random
 import string
@@ -143,15 +144,28 @@ def about(request):
 
 def shop(request):
     
-    products = Product.objects.all()
+    print(f"{request.GET=}")
+    collection = request.GET.getlist('collection', '')
+    size = request.GET.getlist('size', '')
     
-    men_count = products.filter(collection="Men").count()
-    women_count = products.filter(collection="Women").count()
-    children_count = products.filter(collection="Children").count()
+    all_products = Product.objects.all()
     
-    small_count = products.filter(size="Small").count()
-    medium_count = products.filter(size="Medium").count()
-    large_count = products.filter(size="Large").count()
+    if not collection and size:
+        products = all_products.filter(size__in=size)
+    elif collection and not size:
+        products = all_products.filter(collection__in=collection)
+    elif collection and size:
+        products = all_products.filter(collection__in=collection, size__in=size)
+    else:
+        products = all_products
+    
+    men_count = all_products.filter(collection="Men").count()
+    women_count = all_products.filter(collection="Women").count()
+    children_count = all_products.filter(collection="Children").count()
+    
+    small_count = all_products.filter(size="Small").count()
+    medium_count = all_products.filter(size="Medium").count()
+    large_count = all_products.filter(size="Large").count()
     
     paginator = Paginator(products, 10)
     
@@ -160,6 +174,14 @@ def shop(request):
     
     return render(request, "shop.html", {
         "page": page,
+        
+        "men_check": True if "Men" in collection else False,
+        "women_check": True if "Women" in collection else False,
+        "children_check": True if "Children" in collection else False,
+        
+        "small_check": True if "Small" in size else False,
+        "medium_check": True if "Medium" in size else False,
+        "large_check": True if "Large" in size else False,
         
         "men": men_count,
         "women": women_count,

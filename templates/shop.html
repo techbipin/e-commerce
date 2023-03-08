@@ -78,37 +78,37 @@ Shop | Shoppers
           </div>
 
           <div class="col-md-3 order-1 mb-5 mb-md-0">
-
-            <div class="border p-4 rounded mb-4">
-              
-              <div class="mb-4">
-                <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
-                <label for="s_sm" class="d-flex">
-                  <input type="checkbox" id="s_sm" class="mr-2 mt-1"> <span class="text-black">Men ({{men}})</span>
-                </label>
-                <label for="s_md" class="d-flex">
-                  <input type="checkbox" id="s_md" class="mr-2 mt-1"> <span class="text-black">Women ({{women}})</span>
-                </label>
-                <label for="s_lg" class="d-flex">
-                  <input type="checkbox" id="s_lg" class="mr-2 mt-1"> <span class="text-black">Children ({{child}})</span>
-                </label>
+            <form method="GET" action="{% url 'shop' %}">
+              <div class="border p-4 rounded mb-4">
+                <div class="mb-4">
+                  <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
+                  <label for="s_sm" class="d-flex">
+                    <input type="checkbox" {% if men_check %} checked {% else %} {% endif %} name="collection" value="Men" id="s_sm" class="mr-2 mt-1"> <span class="text-black">Men ({{men}})</span>
+                  </label>
+                  <label for="s_md" class="d-flex">
+                    <input type="checkbox" {% if women_check %} checked {% else %} {% endif %} name="collection" value="Women" id="s_md" class="mr-2 mt-1"> <span class="text-black">Women ({{women}})</span>
+                  </label>
+                  <label for="s_lg" class="d-flex">
+                    <input type="checkbox" {% if children_check %} checked {% else %} {% endif %} name="collection" value="Children" id="s_lg" class="mr-2 mt-1"> <span class="text-black">Children ({{child}})</span>
+                  </label>
+                </div>
+                <div class="mb-4">
+                  <h3 class="mb-3 h6 text-uppercase text-black d-block">Size</h3>
+                  <label for="s_sm" class="d-flex">
+                    <input type="checkbox" {% if small_check %} checked {% else %} {% endif %} name="size" value="Small" id="s_sm" class="mr-2 mt-1"> <span class="text-black">Small ({{small}})</span>
+                  </label>
+                  <label for="s_md" class="d-flex">
+                    <input type="checkbox" {% if medium_check %} checked {% else %} {% endif %} name="size" value="Medium" id="s_md" class="mr-2 mt-1"> <span class="text-black">Medium ({{medium}})</span>
+                  </label>
+                  <label for="s_lg" class="d-flex">
+                    <input type="checkbox" {% if large_check %} checked {% else %} {% endif %} name="size" value="Large" id="s_lg" class="mr-2 mt-1"> <span class="text-black">Large ({{large}})</span>
+                  </label>
+                </div>
+                <div class="mb-8">
+                  <button type="submit" class="buy-now btn btn-sm btn-primary">Apply</button>
+                </div>
               </div>
-              <div class="mb-4">
-                <h3 class="mb-3 h6 text-uppercase text-black d-block">Size</h3>
-                <label for="s_sm" class="d-flex">
-                  <input type="checkbox" id="s_sm" class="mr-2 mt-1"> <span class="text-black">Small ({{small}})</span>
-                </label>
-                <label for="s_md" class="d-flex">
-                  <input type="checkbox" id="s_md" class="mr-2 mt-1"> <span class="text-black">Medium ({{medium}})</span>
-                </label>
-                <label for="s_lg" class="d-flex">
-                  <input type="checkbox" id="s_lg" class="mr-2 mt-1"> <span class="text-black">Large ({{large}})</span>
-                </label>
-              </div>
-              <div class="mb-8">
-                <a href="#" class="buy-now btn btn-sm btn-primary">Apply</a>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
 
